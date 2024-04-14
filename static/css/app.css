@@ -1,0 +1,94 @@
+@charset "utf-8";
+body {
+	font-family: 'Meiryo', 'メイリオ', sans-serif !important;
+}
+
+.content_block {
+	padding:10px;
+	background-color: #FFF;
+}
+
+/* talk_list */
+.talk_list li {
+	display: flex;
+	align-items: flex-start;
+	padding: 20px 5px;
+	border-bottom: 1px solid #CCC;
+}
+.talk_list li .img {
+	width:46px;
+	margin-right:10px;
+}
+.talk_list li .img figure {
+	display: block;
+	width:40px;
+	height:40px;
+	margin-bottom: 5px;
+	overflow: hidden;
+	border:3px solid #FFF;
+	box-shadow: 0px 0px 0px 1px #CCC;
+	border-radius: 50%;
+}
+.talk_list li .img img {
+	max-width:100%;
+	max-height:100%;
+}
+.talk_list li .img .name {
+	display: block;
+	font-size:10px;
+	text-align: center;
+}
+.talk_list li .block .time {
+	display: block;
+	font-size: 10px;
+	color:#666;
+	margin-bottom:5px;
+}
+.talk_list li .block .text {
+	font-size: 14px;
+	line-height: 1.2;
+	margin-bottom:10px;
+}
+.talk_list li .block .text.margin-bottom--0 {
+	margin-bottom:0;
+}
+.talk_list li .block .btn {
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom:-5px;
+}
+.talk_list li .block .btn button {
+	display: flex;
+	align-items: center;
+	font-size: 11px;
+	padding:5px 10px;
+	margin: 0 5px 5px 0;
+	color: #FFF;
+	border:1px solid #ff7c7c;
+	background-color: #ff7c7c;
+	border-radius: 50px;
+}
+.talk_list li .block .btn button:before {
+	display: block;
+	content:"";
+	width: 15px;
+	height: 11px;
+	margin-right: 2px;
+	background: url(../images/icon_white.png) 0 0 / cover;
+}
+.talk_list li .block .btn button.active {
+	color: #ff7c7c;
+	background-color: #FFF;
+}
+.talk_list li .block .btn button.active:before {
+	background-image: url(../images/icon_pink.png);
+}
+.talk_list li .block .btn button:last-child {
+	margin-right: 0;
+}
+
+/* history_list */
+.fc_01 {
+	color: #ff7c7c;
+	font-weight: bold;
+}

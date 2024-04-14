@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ねこんばーたー ｜ みんなの応援</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=5.0,user-scalable=no" >
+  <link rel="stylesheet" href="../static/css/app.css" type="text/css">
+  <link rel="stylesheet" href="../static/css/reset.css" type="text/css">
+</head>
+
+<body>
+  <div class="content_block">
+    <span class="close_btn"></span>
+    <!-- <p id="userIdDisplay">ユーザーID: 未取得</p>
+    <div id="responseData"></div> -->
+
+    <ul class="talk_list" id="talkList"></ul>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <script>
+// $(document).ready(function() {
+//     initializeLiff();
+// });
+
+function initializeLiff() {
+    liff.init({
+        liffId: '2004632163-baAKkMmz'
+    }).then(() => {
+        if (liff.isLoggedIn()) {
+            getUserInfo();
+        } else {
+            liff.login();
+        }
+    }).catch((err) => {
+        console.log('LIFF Initialization failed:', err);
+    });
+}
+
+function getUserInfo() {
+    liff.getProfile().then(profile => {
+        const userId = profile.userId;
+        $('#userIdDisplay').text(`ユーザーID: ${userId}`);
+        // sendUserId(userId); 
+        requestUserData(userId);
+    }).catch((err) => {
+        console.error('Failed to get user profile:', err);
+    });
+}
+
+function sendUserId(userId) {
+    $.ajax({
+        url: 'https://fb83-150-249-244-49.ngrok-free.app',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ userId: userId }),
+        success: function(response) {
+            displayResponseData(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX request failed:', error);
+        }
+    });
+}
+
+function displayResponseData(data) {
+    var content = '<h2>サーバーレスポンス:</h2>';
+    for (var key in data) {
+        content += `<p>${key}: ${data[key]}</p>`;
+    }
+    $('#responseData').html(content);
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // swap elements
+    }
+}
+
+function requestUserData(userId) {
+    const users = [
+                    { name: "ノルウェージャン"},
+                    { name: "サビ"},
+                    { name: "アメリカンショートヘア"},
+                    { name: "マンチカン"},
+                    { name: "ラグドール"},
+                    { name: "ペルシャ"},
+                    { name: "エキゾチック"},
+                    { name: "ロシアンブルー"},
+                    { name: "ヒマラヤン"},
+                    { name: "スコティッシュフォールド"}
+                ];
+    $.ajax({
+        url: "/api/history",
+        type: "GET",
+        data: { user_id: userId },
+        success: function(data) {
+            const talkList = document.getElementById('talkList');
+            data.records.forEach((record, index) => {
+                var random = Math.floor(Math.random() * 10) + 1
+                var additionalText = "";
+                switch(record.reaction.value) {
+                    case "ファイトにゃ":
+                        additionalText = "とて応援してくれたよ！";
+                        break;
+                    case "わかるにゃ":
+                        additionalText = "と同意してくれたよ！";
+                        break;
+                    case "にゃ？":
+                        additionalText = "と反応してくれたよ！";
+                        break;
+                    default:
+                        additionalText = ""; 
+                }
+                const li = document.createElement('li');
+                li.innerHTML = `<div class="img"><figure><img src="../static/images/cat_0${(random % 10) + 1}.png"></figure></div>
+                                <dif class="block"><p class="text margin-bottom--0">${users[random % 10].name}が<span class="fc_01">${record.reaction.value}</span>${additionalText}</p></div>`;
+                talkList.appendChild(li);
+            });
+        }
+    });
+}
+    </script>
+</body>
+
+</html>

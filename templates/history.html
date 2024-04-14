@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ねこんばーたー ｜ みんなのにゃー</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=5.0,user-scalable=no">
+  <link rel="stylesheet" href="../static/css/app.css?=20240412" type="text/css">
+  <link rel="stylesheet" href="../static/css/reset.css" type="text/css">
+</head>
+
+<body>
+  <div class="content_block">
+    <span class="close_btn"></span>
+
+    <ul class="talk_list" id="talkList"></ul>
+
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+        $.ajax({
+            url: "/api/posts",
+            type: "GET",
+            success: function(data) {
+                console.log(data)
+
+                const users = [
+                    { name: "ノルウェージャン"},
+                    { name: "サビ"},
+                    { name: "アメリカンショートヘア"},
+                    { name: "マンチカン"},
+                    { name: "ラグドール"},
+                    { name: "ペルシャ"},
+                    { name: "エキゾチック"},
+                    { name: "ロシアンブルー"},
+                    { name: "ヒマラヤン"},
+                    { name: "スコティッシュフォールド"}
+                ];
+
+
+                const talkList = document.getElementById('talkList');
+                data.records.forEach((record, index) => {
+                  var random = Math.floor(Math.random() * 10) + 1
+                    const li = document.createElement('li');
+                    li.setAttribute('data-user-id', record.user_id.value);
+                    //li.setAttribute('data-user-name', record.user_name.value);
+                    li.innerHTML = `
+                        <div class="img">
+                            <figure><img src="../static/images/cat_0${(random % 10) + 1}.png"></figure>
+                            <span class="name">${users[random % 10].name}</span>
+                        </div>
+                        <div class="block">
+                            <time class="time">${record.作成日時.value}</time>
+                            <p class="text">${record.message.value}</p>
+                            <div class="btn">
+                                <button data-reaction="わかるにゃ">わかるにゃ</button>
+                                <button data-reaction="ファイトにゃ">ファイトにゃ</button>
+                                <button data-reaction="にゃ？">にゃ？</button>
+                            </div>
+                        </div>
+                    `;
+                    talkList.appendChild(li);
+
+                    // Add click event listener to buttons
+                    $(li).find('button').on('click', function() {
+                        var $this = $(this);
+                        $this.addClass('active');
+
+                        var userId = $this.closest('li').data('user-id');
+                        //var userName = $this.closest('li').data('user-name');
+                        var reaction = $this.data('reaction');
+
+                        $.ajax({
+                            url: "/api/reaction",
+                            type: "POST",
+                            contentType: "application/json",
+                            data: JSON.stringify({
+                                user_id: userId,
+                                //user_name: userName,
+                                reaction: reaction
+                            }),
+                            success: function(response) {
+                                console.log('Reaction sent successfully');
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error sending reaction:', error);
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>
